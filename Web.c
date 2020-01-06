@@ -39,7 +39,7 @@ void accept_request(int client)
     char path[512];
     size_t i, j;
     struct stat st;
-    int cgi = 0;      /* becomes true if server decides this is a CGI program */
+    int cgi = 0;      /* 设置动态页面的标记码 */
     char *query_string = NULL;
  
     /*得到请求的第一行*/
@@ -76,7 +76,7 @@ void accept_request(int client)
     }
     url[i] = '\0';
  
-    /*处理 GET 方法*/
+    /*处理 带参数的GET 方法*/
     if (strcasecmp(method, "GET") == 0)
     {
         /* 待处理请求为 url */
@@ -94,7 +94,7 @@ void accept_request(int client)
     }
  
     /*格式化 url 到 path 数组，html 文件都在 htdocs 中*/
-    sprintf(path, "htdocs%s", url);
+    sprintf(path, "/home/li/文档/MyWeb/lib%s", url);
     /*默认情况为 index.html */
     if (path[strlen(path) - 1] == '/')
         strcat(path, "index.html");
@@ -111,13 +111,13 @@ void accept_request(int client)
         /*如果是个目录，则默认使用该目录下 index.html 文件*/
         if ((st.st_mode & S_IFMT) == S_IFDIR)
             strcat(path, "/index.html");
-      if ((st.st_mode & S_IXUSR) || (st.st_mode & S_IXGRP) || (st.st_mode & S_IXOTH)    )
-          cgi = 1;
+      if ((st.st_mode & S_IXUSR) || (st.st_mode & S_IXGRP) || (st.st_mode & S_IXOTH)    ){//实现文件的必须可读性
       /*不是 cgi,直接把服务器文件返回，否则执行 cgi */
       if (!cgi)
           serve_file(client, path);
       else
-          execute_cgi(client, path, method, query_string);
+          execute_cgi(client, path, method, query_string); 
+	}
     }
  
     /*断开与客户端的连接（HTTP 特点：无连接）*/
