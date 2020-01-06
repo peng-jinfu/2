@@ -420,14 +420,6 @@ int startup(u_short *port)
     name.sin_addr.s_addr = htonl(INADDR_ANY);
     if (bind(httpd, (struct sockaddr *)&name, sizeof(name)) < 0)
         error_die("bind");
-    /*如果当前指定端口是 0，则动态随机分配一个端口*/
-    if (*port == 0)  /* if dynamically allocating a port */
-    {
-        int namelen = sizeof(name);
-        if (getsockname(httpd, (struct sockaddr *)&name, &namelen) == -1)
-            error_die("getsockname");
-        *port = ntohs(name.sin_port);
-    }
     /*开始监听*/
     if (listen(httpd, 5) < 0)
         error_die("listen");
@@ -465,15 +457,15 @@ void unimplemented(int client)
 int main(void)
 {
     int server_sock = -1;
-    u_short port = 0;
+    u_short port = 8080;
     int client_sock = -1;
     struct sockaddr_in client_name;
     int client_name_len = sizeof(client_name);
-    pthread_t newthread;
+    pthread_t newthread; 
  
     /*在对应端口建立 httpd 服务*/
     server_sock = startup(&port);
-    printf("httpd running on port %d\n", port);
+    printf("服务器已运行，服务端口是8080\n");
  
     while (1)
     {
