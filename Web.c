@@ -483,7 +483,7 @@ int main(void)
             error_die("accept");
         /*派生新线程用 accept_request 函数处理新请求*/
         /* accept_request(client_sock); */
-        if (pthread_create(&newthread , NULL, accept_request, client_sock) != 0)
+        if (pthread_create(&newthread , NULL, (void*)accept_request, (void*)(int) client_sock) != 0)
             perror("pthread_create");
     }
  
