@@ -16,18 +16,18 @@
 
 #define SERVER_STRING "Server: jdbhttpd/0.1.0\r\n"
 
-void accept_request(int);
-void bad_request(int);
-void cat(int, FILE *);
-void cannot_execute(int);
-void error_die(const char *);
-void execute_cgi(int, const char *, const char *, const char *);
-int get_line(int, char *, int);
-void headers(int, const char *);
-void not_found(int);
-void serve_file(int, const char *);
-int startup(u_short *);
-void unimplemented(int);
+void accept_request(int);//处理从套接字上监听到的一个 HTTP 请求，在这里可以很大一部分地体现服务器处理请求流程
+void bad_request(int);//返回给客户端这是个错误请求，HTTP 状态码 400 BAD REQUEST
+void cat(int, FILE *);// 读取服务器上某个文件写到 socket 套接字
+void cannot_execute(int);//主要处理发生在执行 cgi 程序时出现的错误
+void error_die(const char *);//把错误信息写到 perror 并退出
+void execute_cgi(int, const char *, const char *, const char *);//运行 cgi 程序的处理，也是个主要函数
+int get_line(int, char *, int);//读取套接字的一行，把回车换行等情况都统一为换行符结束
+void headers(int, const char *);//把 HTTP 响应的头部写到套接字
+void not_found(int);//主要处理找不到请求的文件时的情况
+void serve_file(int, const char *);//调用 cat 把服务器文件返回给浏览器
+int startup(u_short *);//初始化 httpd 服务，包括建立套接字，绑定端口，进行监听等
+void unimplemented(int);//返回给浏览器表明收到的 HTTP 请求所用的 method 不被支持
 
 //处理从套接字上监听到的一个 HTTP 请求
 void accept_request(int client)
