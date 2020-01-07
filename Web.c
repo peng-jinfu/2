@@ -93,15 +93,16 @@ void accept_request(int client)
         }
     }
  
-    /*格式化 url 到 path 数组，html 文件都在 htdocs 中*/
+    /*格式化 url 到 path 数组，html 文件都在 lib中*/
     sprintf(path, "/home/li/文档/MyWeb/lib%s", url);
+    //printf("这是path:%s\n",path);
     /*默认情况为 index.html */
     if (path[strlen(path) - 1] == '/')
         strcat(path, "index.html");
     /*根据路径找到对应文件 */
     if (stat(path, &st) == -1) {
         /*把所有 headers 的信息都丢弃*/
-        while ((numchars > 0) && strcmp("\n", buf))  /* read & discard headers */
+        while ((numchars > 0) && strcmp("\n", buf)) 
             numchars = get_line(client, buf, sizeof(buf));
         /*回应客户端找不到*/
         not_found(client);
@@ -355,26 +356,19 @@ void headers(int client, const char *filename)
 void not_found(int client)
 {
     char buf[1024];
- 
     /* 404 页面 */
     sprintf(buf, "HTTP/1.0 404 NOT FOUND\r\n");
     send(client, buf, strlen(buf), 0);
     /*服务器信息*/
     sprintf(buf, SERVER_STRING);
     send(client, buf, strlen(buf), 0);
-    sprintf(buf, "Content-Type: text/html\r\n");
+    sprintf(buf, "Content-Type: text/html; charset=utf-8\r\n");
     send(client, buf, strlen(buf), 0);
     sprintf(buf, "\r\n");
     send(client, buf, strlen(buf), 0);
-    sprintf(buf, "<HTML><TITLE>Not Found</TITLE>\r\n");
-    send(client, buf, strlen(buf), 0);
-    sprintf(buf, "<BODY><P>The server could not fulfill\r\n");
-    send(client, buf, strlen(buf), 0);
-    sprintf(buf, "your request because the resource specified\r\n");
-    send(client, buf, strlen(buf), 0);
-    sprintf(buf, "is unavailable or nonexistent.\r\n");
-    send(client, buf, strlen(buf), 0);
-    sprintf(buf, "</BODY></HTML>\r\n");
+    sprintf(buf, "<HTML><TITLE>404 Not Found</TITLE>\r\n");
+    sprintf(buf, "%s<div style=""text-align:center""><BODY><h1>404</h1><h2>服务器无法找到请求的内容,你的链接请求已终止\r\n",buf);
+    sprintf(buf, "%s</BODY></div></HTML>\r\n",buf);
     send(client, buf, strlen(buf), 0);
 }
  
