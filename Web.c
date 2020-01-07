@@ -30,6 +30,9 @@ int startup(u_short *);//初始化 httpd 服务，包括建立套接字，绑定
 void unimplemented(int);//返回给浏览器表明收到的 HTTP 请求所用的 method 不被支持
 
 //处理从套接字上监听到的一个 HTTP 请求
+/*accept_request函数解析客户端请求，判断是请求静态文件还是cgi代码
+ （通过请求类型以及参数来判定），如果是静态文件则将文件输出给前端，
+ 如果是cgi则进入cgi处理函数*/
 void accept_request(int client)
 {
     char buf[1024];
