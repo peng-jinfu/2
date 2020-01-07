@@ -94,7 +94,7 @@ void accept_request(int client)
     }
 
     /*格式化 url 到 path 数组，html 文件都在 htdocs 中*/
-    sprintf(path, "/home/li/MyWeb%s", url);
+    sprintf(path, "/home/linux/2/lib%s", url);
     /*默认情况为 index.html */
     if (path[strlen(path) - 1] == '/')
         strcat(path, "index.html");
@@ -112,7 +112,6 @@ void accept_request(int client)
         if ((st.st_mode & S_IFMT) == S_IFDIR)
             strcat(path, "/index.html");
       if ((st.st_mode & S_IXUSR) || (st.st_mode & S_IXGRP) || (st.st_mode & S_IXOTH)    )
-         cgi = 1;
       /*不是 cgi,直接把服务器文件返回，否则执行 cgi */
       if (!cgi)
           serve_file(client, path);
